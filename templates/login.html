@@ -1,0 +1,38 @@
+{% extends 'base.html'%}
+
+{%block content%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h3>Enter details to Login</h3>
+    <form action="login" method="post">
+        {%csrf_token%}
+        Username : <input type='text' name='username'><br><br>
+        Password : <input type='password' name='pass'><br><br>
+        <input type='submit' value='Login'>
+
+    </form>
+    <br><br>
+
+    
+    <form action="signup" method="get">
+        {%csrf_token%}
+      <h3> Don't have an account? </h3><input type='submit' value='Sign Up'>
+    </form>
+
+    <div>
+        {%for message in messages%}
+        <h3>{{message}}</h3>
+        {% endfor %}
+    </div>
+</body>
+</html>
+
+{%endblock%}

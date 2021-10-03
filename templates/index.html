@@ -1,0 +1,36 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Donar Registration Form</h2><br>
+
+    {% if user.is_authenticated%}
+    <h3>Hello, {{user.username}}</h3>
+    
+    <h4>Enter details of donor to add</h4><br>
+    <form action="add-donor" method="post">
+        {%csrf_token%}
+        Name: <input type='text' name='name' ><br><br>
+        Age: <input type='number' name='age' ><br><br>
+        Blood Group: <input type='text' name='blood' ><br><br>
+        Mob No: <input type='tel' name='phno' ><br><br>
+        <input type='submit'  value='Add'>
+
+    </form>
+    <br><br>
+    
+
+    {% endif %}
+</body>
+</html>
+
+{%endblock%}

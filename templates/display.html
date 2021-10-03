@@ -1,0 +1,64 @@
+{%extends 'base.html'%}
+{% block content%}
+
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank</title>
+    <ul style="list-style: none;">
+        <li><a href="logout"><p style="text-align-last: right;">LOGOUT</p></a></li>
+       </ul>
+
+    <br>
+    <form action="add-donor" method="get">
+        <input type="submit" value='ADD ENTRIES' >
+    </form>
+    
+    
+    <!-- <li><a href="add-donor">ADD ENTRIES</a></li> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+   
+    
+</head>
+<body>
+    
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <script src="{%static 'js/script.js' %}"></script>
+
+    <table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Blood Group</th>
+                <th>Mobile Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            {%for person in persons%}
+                <tr>
+               
+                        <td>{{person.name}}</td>
+                        <td>{{person.age}}</td>
+                        <td>{{person.bloodgroup}}</td>
+                        <td>{{person.phno}}</td>
+                
+                </tr>
+             {%endfor%}
+            
+        </tbody>
+        
+</body>
+</html>
+
+{% endblock%}
