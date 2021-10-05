@@ -1,14 +1,18 @@
 
 from register.models import Doner
-from django.http import response
+from django.http import response,JsonResponse
 from django.http.response import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 
+
 # Create your views here.
 persons=[]
 
+
+def color(request):
+    return render(request,'color.html')
 
 
 def login(request):
@@ -20,11 +24,18 @@ def login(request):
 
         if user is not None:
             auth.login(request,user)
-            return redirect('display')
+            
+            return JsonResponse(
+                {'success':True},
+                safe=False
+            )
 
         else:
-            messages.info(request,'Invalid credetials')
-            return redirect('login')
+            
+            return JsonResponse(
+                {'success':False},
+                safe=False
+            )
     else:
         return render(request,'login.html')
     
@@ -38,16 +49,24 @@ def signup(request):
 
         if pass1==pass2:
             if User.objects.filter(username=username).exists():
-                messages.info(request,'username taken')
-                return redirect('register')
+                
+                return JsonResponse(
+                    {'success':'username'},
+                    safe=False
+                )
             elif User.objects.filter(email=email).exists():
-                messages.info(request,'email taken')
-                return redirect('signup')
+                return JsonResponse(
+                    {'success':'email'},
+                    safe=False
+                )
             else:
                 user = User.objects.create_user(username=username,password=pass1,email=email)
                 user.save();
                 print('user created')
-                return redirect('login')
+                return JsonResponse(
+                    {'success':'go'},
+                    safe=False
+                )
         else:
             messages.info(request,'password not matching')
             return redirect('signup')

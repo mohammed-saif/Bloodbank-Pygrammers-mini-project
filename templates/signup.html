@@ -14,24 +14,71 @@
     <h3>Enter details for creating account</h3>
     <form action="signup" method="post">
         {%csrf_token%}
-        Username : <input type="text" name='username' placeholder="Username"><br><br>
-        Email : <input type='email' name='email' placeholder="Email"><br><br>
-        Password : <input type='password' name='pass1' placeholder="Password"><br><br>
-        Confirm Password : <input type='password' name='pass2' placeholder="Password"><br><br>
-        <input type='submit' value='Sign Up'>
+        Username : <input type="text" name='username' id='username' placeholder="Username"><br><br>
+        Email : <input type='email' name='email' id='email' placeholder="Email"><br><br>
+        Password : <input type='password' name='pass1' id='pass1' placeholder="Password"><br><br>
+        Confirm Password : <input type='password' name='pass2' id='pass2' placeholder="Password"><br><br>
+        <input type='button' value='Sign Up' id='btn1'>
+        <span id='spanerror' style="color: red;"></span>
     </form>
     <br><br>
     <form action="login" method="get">
-        {%csrf_token%}
+        
         <h3>Already have an account?</h3> <input type='submit' value='Login'>
     </form>
 
-    <div>
-        {%for message in messages%}
-        <h3>{{message}}</h3>
-        {% endfor %}
-    </div>
+    
 </body>
 </html>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $('#btn1').click(()=>{
+        var username=$('#username').val()
+        var email=$('#email').val()
+        var pass1=$('#pass1').val()
+        var pass2=$('#pass2').val()
+        var data={
+            'csrfmiddlewaretoken':'{{csrf_token}}',
+            'username':username,
+            'email':email,
+            'pass1':pass1,
+            'pass2':pass2
+        }
+        if(username==''){
+            $('#spanerror').html('Enter valid username')
+        }
+        else if(email==''){
+            $('#spanerror').html('Enter valid Email')
+        }
+        else if(pass1==''){
+            $('#spanerror').html('Enter valid password')
+        }
+        else if(pass1!=pass2){
+            $('#spanerror').html('Password not matching')
+        }
+        else{
+            $.ajax({
+                url:'signup',
+                method:'POST',
+                data: data,
+                dataType:'json',
+                success:function(data){
+                    if(data.success=='go'){
+                        
+                       window.location.replace('/login')
+                     }
+                     else if(data.success=='username'){
+                        $('#spanerror').html('username taken')
+                    }
+                    else if(data.success=='email'){
+                        $('#spanerror').html('existing email')
+                    }
+                    else{
+                        $('#spanerror').html('Invalid Credentials')
+                     }
+                 }  
+            })
+        }
+    })
+</script>
 {%endblock%}
