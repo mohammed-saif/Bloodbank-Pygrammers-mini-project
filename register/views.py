@@ -10,12 +10,9 @@ from django.contrib import messages
 # Create your views here.
 persons=[]
 
-
-def color(request):
-    return render(request,'color.html')
-
-
 def login(request):
+    if 'username' in request.session:
+        return redirect ('display')
     if request.method=='POST':
         username=request.POST['username']
         password=request.POST['pass']
@@ -23,7 +20,8 @@ def login(request):
         user=auth.authenticate(username=username,password=password)
 
         if user is not None:
-            auth.login(request,user)
+           
+            request.session['username'] = username
             
             return JsonResponse(
                 {'success':True},
@@ -77,28 +75,37 @@ def signup(request):
 
 
 def add_donor(request):
-    if request.method=='POST':
-        name=request.POST['name']
-        age=request.POST['age']
-        blood=request.POST['blood']
-        phno=request.POST['phno']
+    
+    
+        if request.method=='POST':
+            name=request.POST['name']
+            age=request.POST['age']
+            blood=request.POST['blood']
+            phno=request.POST['phno']
 
-        doner=Doner.objects.create(name=name,age=age,bloodgroup=blood,phno=phno)
-        doner.save();
+            doner=Doner.objects.create(name=name,age=age,bloodgroup=blood,phno=phno)
+            doner.save();
 
+            
+            persons=Doner.objects.all()
+            return render(request,'display.html',{'persons':persons})
         
+        else:
+            return render(request,'index.html')
+
+    
+
+
+def display(request):
+    if 'username' in request.session:
         persons=Doner.objects.all()
         return render(request,'display.html',{'persons':persons})
     
     else:
-        return render(request,'index.html')
-
-
-def display(request):
-    persons=Doner.objects.all()
-    return render(request,'display.html',{'persons':persons})
+        return redirect('login')
 
 
 def logout(request):
-    auth.logout(request)
+    if 'username' in request.session:
+        request.session.flush()
     return redirect('login')
